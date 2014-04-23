@@ -5,11 +5,11 @@
   <script src="http://mbostock.github.com/d3/d3.v2.min.js?2.8.1"></script>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style>
-    body { color: #444; background: #fff; font: normal 10px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
+    body { color: #444; background: #fff; font: normal 12px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
     header { margin: 0 0 20px 20px; border-bottom: 1px solid #6c6c6c; width: 270px; position: relative; }
     h1 { font-size: 14px; font-weight: normal; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
     h2 { font-size: 12px; font-weight: normal; font-style: italic; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
-    small { margin: 0 0 10px 120px; color: #a3a3a3; font-size: 10px; top: 0.6em; position: top;}
+    small { margin: 0 0 10px 120px; color: #444; font-size: 12px; font-style: italic; top: 0.6em; position: top;}
     a { color: #a3a3a3; }
 
     text.label { fill: #444; }
@@ -23,6 +23,8 @@
     .over text.label { fill: rgb(70,111,169); font-size: 10px !important; font-weight: bold; }
     .over line.slope1 { stroke: rgb(70,111,169); stroke-width: 2; }
     .over line.slope2 { stroke: rgb(70,111,169); stroke-width: 2; }
+
+    #textToDisplay{ color: #777 ; font-size: 12px !important; font-weight: normal; }
     .row {
 
       width: 500px;
@@ -76,9 +78,39 @@
     .container-fluid:after {
       clear: both;
     }
+    #tooltip {
+      position: absolute;
+      width: auto;
+      height: auto;
+      padding: 10px;
+      background-color: white;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px;
+      -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+    }
+
+#tooltip.hidden {
+      display: none;
+    }
+
+#tooltip p {
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 10px;
+      line-height: 12px;
+    }
   </style>
 </head>
 <body>
+  <div id="tooltip" class="hidden">
+    <p>Country: <strong><span id="countryTooltip">All</span></strong></p>
+    <p>2005: <i><span id="startTooltip">XX</span></i></p>
+    <p>2010: <i><span id="endTooltip">XX</span></i></p>
+</div>
   <div class="row">
   <div class="span3">
   <header>
@@ -110,7 +142,7 @@
 <script>
   data = null;
 
-  d3.csv("data/costOfLifeData.csv", function(csv) {
+  d3.csv("data/deathData.csv", function(csv) {
     data = csv;
     var
         // Extract years from the dataset
@@ -138,11 +170,11 @@
                       .filter(function(d) { return (!isNaN(d.start) && !isNaN(d.end)); }),
         // Extract the values for every country for both years in the dataset for the scale
         values = data
-                      .map( function(d) { return parseFloat(d3.round(d.start, 1)); })
+                      .map( function(d) { return parseFloat(d3.round(d.start, 2)); })
                       .filter( function(d) { return d; } )
                       .concat(
                         data
-                          .map( function(d) { return parseFloat(d3.round(d.end, 1)); } )
+                          .map( function(d) { return parseFloat(d3.round(d.end, 2)); } )
                           .filter( function(d) { return d; } )
                       ),
         values=values.sort(function(a,b){return d3.descending(a,b);}),
@@ -150,7 +182,7 @@
         missing = function(d) { return !d.start || !d.end; },
 
         // Format values for labels
-        label_format = function(value) { return d3.format("g")(d3.round(value, 1)); },
+        label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
 
         font_size = 9,
         margin = 30,
@@ -178,15 +210,15 @@
 	//Preset the Y positions (necessary only for the lower side)
 	//These are used as suggested positions.
 	data.forEach(function(d) {
-		d.startY = slope(d3.round(d.start,1));
-		d.endY = slope(d3.round(d.end,1));
+		d.startY = slope(d3.round(d.start,2));
+		d.endY = slope(d3.round(d.end,2));
 	});
 
 	//Loop over the higher side (right) values, adding space to both sides if there's a collision
 	data
 		.sort(function(a,b) {
 			if (a.end == b.end) return 0;
-			return (a.end < b.end) ? -1 : +1;
+			return (a.end < b.end) ? -3 : +3;
 		})
 		.forEach(function(d) {
 			thisY = d.endY; //position "suggestion"
@@ -229,7 +261,7 @@
                     .classed("missing", function(d) { return missing(d); });
 
     country
-      .on("mouseover", function(d,i) {return d3.select(this).classed("over", true); })
+      .on("mouseover", function(d,i) { return d3.select(this).classed("over", true); })
       .on("mouseout", function(d,i) { return d3.select(this).classed("over", false); });
 
     // ** Left column
@@ -289,6 +321,35 @@
       //.style("font-size", font_size)
       .style("font-weight","bold")
       .text("2010");
+
+    chart.selectAll("text")
+      .on("mouseover",function(d){
+        var xPosition = parseFloat(d3.select(this).attr("x")) + document.getElementById("chart").offsetLeft + 1.5*margin.left ;
+        var yPosition = parseFloat(d3.select(this).attr("y")) +document.getElementById("chart").offsetTop - font_size*1.5;
+                 
+        d3.select("#tooltip")
+                    .style("left",width+"px")
+                    .style("top", yPosition+"px") 
+                    .select("#countryTooltip")
+                    .text(function(){
+                        return d.label;
+                    });
+        d3.select("#tooltip")
+                    .select("#startTooltip")
+                    .text(function(){
+                        return d.start + " deaths";
+                    });
+        d3.select("#tooltip") 
+                    .select("#endTooltip")
+                    .text(function(){
+                        return d.end + " deaths";
+                    });
+        d3.select("#tooltip").classed("hidden", false);
+      })
+      .on("mouseout",function(d){
+          d3.select("#tooltip").classed("hidden", true);
+      });
+
     return chart;
   });
 
@@ -349,11 +410,11 @@ function change(){
                       .filter(function(d) { return (!isNaN(d.start) && !isNaN(d.end)); }),
         // Extract the values for every country for both years in the dataset for the scale
         values = data
-                      .map( function(d) { return parseFloat(d3.round(d.start, 1)); })
+                      .map( function(d) { return parseFloat(d3.round(d.start, 2)); })
                       .filter( function(d) { return d; } )
                       .concat(
                         data
-                          .map( function(d) { return parseFloat(d3.round(d.end, 1)); } )
+                          .map( function(d) { return parseFloat(d3.round(d.end, 2)); } )
                           .filter( function(d) { return d; } )
                       ),
         values=values.sort(function(a,b){return d3.descending(a,b);}),
@@ -361,7 +422,7 @@ function change(){
         missing = function(d) { return !d.start || !d.end; },
 
         // Format values for labels
-        label_format = function(value) { return d3.format("g")(d3.round(value, 1)); },
+        label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
 
         font_size = 9,
         margin = 30,
@@ -389,15 +450,15 @@ function change(){
   //Preset the Y positions (necessary only for the lower side)
   //These are used as suggested positions.
   data.forEach(function(d) {
-    d.startY = slope(d3.round(d.start,1));
-    d.endY = slope(d3.round(d.end,1));
+    d.startY = slope(d3.round(d.start,2));
+    d.endY = slope(d3.round(d.end,2));
   });
 
   //Loop over the higher side (right) values, adding space to both sides if there's a collision
   data
     .sort(function(a,b) {
       if (a.end == b.end) return 0;
-      return (a.end < b.end) ? -1 : +1;
+      return (a.end < b.end) ? -3 : +3;
     })
     .forEach(function(d) {
       thisY = d.endY; //position "suggestion"
@@ -500,6 +561,40 @@ function change(){
       //.style("font-size", font_size)
       .style("font-weight","bold")
       .text("2010");
+    chart.selectAll("text")
+      .on("mouseover",function(d){
+        var xPosition = parseFloat(d3.select(this).attr("x")) + document.getElementById("chart").offsetLeft + 1.5*margin.left ;
+        var yPosition = parseFloat(d3.select(this).attr("y")) +document.getElementById("chart").offsetTop - font_size*1.5;
+                 
+        d3.select("#tooltip")
+                    .style("left",width+"px")
+                    .style("top", yPosition+"px") 
+                    .select("#countryTooltip")
+                    .text(function(){
+                        return d.label;
+                    });
+        d3.select("#tooltip")
+                    .select("#startTooltip")
+                    .text(function(){
+                      if(document.getElementById("unitToDisplay").innerHTML=="Number")
+                        return d.start + " deaths";
+                      else  
+                        return d.start + " USD millions";
+                    });
+        d3.select("#tooltip") 
+                    .select("#endTooltip")
+                    .text(function(){
+                      if(document.getElementById("unitToDisplay").innerHTML=="Number")
+                        return d.end + " deaths";
+                      else  
+                        return d.end + " USD millions";
+                    });
+        d3.select("#tooltip").classed("hidden", false);
+      })
+      .on("mouseout",function(d){
+          d3.select("#tooltip").classed("hidden", true);
+      });
+
     return chart;
   });
 };
