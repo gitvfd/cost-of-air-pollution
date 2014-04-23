@@ -85,9 +85,6 @@
     <h1>
       Cost of deaths from ambient air pollution
     </h1><p>
-    <small id="unitToDisplay">
-      Number
-    </small>
   </header>
 </div></div>
   <div class="row">
@@ -97,6 +94,10 @@
       <label><input type="radio" name="mode" id="vslData" value="vslData" >  VSL</label>
       <label><input type="radio" name="mode" id="costOfLifeData" value="costOfLifeData" >  Cost of deaths from ambient air</label>
     </form>
+    <br>
+    <small id="unitToDisplay">
+      Number
+    </small>
   </div >
   </div>
 
@@ -267,6 +268,27 @@
         return d.end && d.end ? d.endY - font_size/2 + 2 : null;
       });
 
+    chart
+      .append("text")
+      .classed("label start", true)
+      .attr("x", 100)
+      .attr("y", 22)
+      //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
+      .attr("xml:space", "preserve")
+      //.style("font-size", font_size)
+      .style("font-weight","bold")
+      .text("2005");
+
+    chart
+      .append("text")
+      .classed("label start", true)
+      .attr("x", width-75)
+      .attr("y", 22)
+      //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
+      .attr("xml:space", "preserve")
+      //.style("font-size", font_size)
+      .style("font-weight","bold")
+      .text("2010");
     return chart;
   });
 
@@ -457,6 +479,27 @@ function change(){
         return d.end && d.end ? d.endY - font_size/2 + 2 : null;
       });
 
+    chart
+      .append("text")
+      .classed("label start", true)
+      .attr("x", 100)
+      .attr("y", 22)
+      //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
+      .attr("xml:space", "preserve")
+      //.style("font-size", font_size)
+      .style("font-weight","bold")
+      .text("2005");
+
+    chart
+      .append("text")
+      .classed("label start", true)
+      .attr("x", width-75)
+      .attr("y", 22)
+      //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
+      .attr("xml:space", "preserve")
+      //.style("font-size", font_size)
+      .style("font-weight","bold")
+      .text("2010");
     return chart;
   });
 };
