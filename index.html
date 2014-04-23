@@ -102,7 +102,7 @@
 
   <div class="row">
   <div class="span1" id="chart"></div>
-  <div class="span2" id="textToDisplay"><br>deathData text</div>
+  <div class="span2" id="textToDisplay"><br><p>Over the 5-year period from 2005 to 2010, there was an overall increase of about 4% in the number of premature deaths due to outdoor air pollution globally - with a 4% improvement in the OECD world being offset by a larger deterioration in the rest of the world:</p><p> while 20 of 34 OECD countries achieved progress, 14 did not.</p><p>The number of deaths due to outdoor air pollution in China rose to 12% of premature deaths; years of life lost increased by about 0.5%. Although the number of deaths in India is only just over half the number in China, the trend in India is increasing faster.</p></div>
 </div>
 </body>
 
@@ -219,7 +219,6 @@
 			previousY = thisY;
 		});
 
-console.log(data);
     // Countries
     var country = chart.selectAll("g.country")
                     .data( data )
@@ -283,15 +282,15 @@ function change(){
             URL="data/"+radios[i].value+".csv";
           if(radios[i].value=="deathData"){
                       document.getElementById("unitToDisplay").innerHTML = "Number";
-                      document.getElementById("textToDisplay").innerHTML = "deathData text";
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>Over the 5-year period from 2005 to 2010, there was an overall increase of about 4% in the number of premature deaths due to outdoor air pollution globally - with a 4% improvement in the OECD world being offset by a larger deterioration in the rest of the world:</p><p> while 20 of 34 OECD countries achieved progress, 14 did not.</p><p>The number of deaths due to outdoor air pollution in China rose to 12% of premature deaths; years of life lost increased by about 0.5%. Although the number of deaths in India is only just over half the number in China, the trend in India is increasing faster.</p>";
           }
           if(radios[i].value=="vslData"){
                       document.getElementById("unitToDisplay").innerHTML = "in USD millions";
-                      document.getElementById("textToDisplay").innerHTML = "vslData text";
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>VSL= Value of a Statistical Life</p><p>In the case of the ultimate impact on health - mortality - economics today possesses a singular, and singularly elegant, <i>standard methodw</i> by which to measure the cost of this impact from a given source: that is to say, to measure the loss of the valued item - life - at the level of the society as a whole. This is the Value of a Statistical Life (VSL).";
           }
           if(radios[i].value=="costOfLifeData"){
                       document.getElementById("unitToDisplay").innerHTML = "in USD millions";
-                      document.getElementById("textToDisplay").innerHTML = "costOfLifeData text";    
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>Outdoor air pollution kills more than three million people across the world every year, and causes health problems from asthma to heart disease for many more.</p><p>This is costing OECD societies plus China and India an estimated 3.5 trillion dollars a year in value of lives lost and ill health, and the trend is rising.</p><p>But how much of the cost of those deaths and health problems is due to pollution from cars, trucks and motorcycles on our roads? Initial evidence based on new information and methods of calculation suggests that road transport is likely responsible for about half the total of USD 1.7 trillion for OECD countries:</p><p>Almost USD 1 trillion.</p>";    
           }
             break;
         }
