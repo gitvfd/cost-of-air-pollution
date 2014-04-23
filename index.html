@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Cost of air pollution</title>
-  <script src="http://mbostock.github.com/d3/d3.v2.min.js?2.8.1"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style>
     body { color: #444; background: #fff; font: normal 12px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
@@ -152,8 +152,8 @@
         countries = csv.map( function(d) { return d["Country"] }),
         // Set "from" and "to" years to display
         //from = d3.first(years),
-        from = d3.first(years),
-        to = d3.last(years),
+        from = d3.min(years),
+        to = d3.max(years),
         // Extract country names and start/end values from the dataset
         data = csv
                       .map( function(d) {
@@ -392,8 +392,8 @@ function change(){
         countries = csv.map( function(d) { return d["Country"] }),
         // Set "from" and "to" years to display
         //from = d3.first(years),
-        from = d3.first(years),
-        to = d3.last(years),
+        from = d3.min(years),
+        to = d3.max(years),
         // Extract country names and start/end values from the dataset
         data = csv
                       .map( function(d) {
