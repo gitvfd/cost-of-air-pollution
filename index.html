@@ -20,11 +20,12 @@
     .missing text.label { display: none; }
     .missing line.slope { display: none; }
 
-    .over text.label { fill: rgb(70,111,169); font-size: 10px !important; font-weight: bold; }
+    .over text.label { fill: rgb(70,111,169); font-size: 10px !important; font-weight: bold; cursor: default;}
     .over line.slope1 { stroke: rgb(70,111,169); stroke-width: 2; }
     .over line.slope2 { stroke: rgb(70,111,169); stroke-width: 2; }
 
-    #textToDisplay{ color: #777 ; font-size: 12px !important; font-weight: normal; }
+    #textToDisplay{ color: #777 ; font-size: 12px ; font-weight: normal; }
+    
     .row {
 
       width: 500px;
@@ -91,6 +92,9 @@
       -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
       box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
       pointer-events: none;
+      opacity: 0.75;
+    filter:alpha(opacity=75);
+    -moz-opacity:0.75;
     }
 
 #tooltip.hidden {
@@ -202,55 +206,55 @@
                   .domain(values)
                   .rangePoints([margin, height-5*margin]);
 
-	//Go through the list of countries in order, adding additional space as necessary.
-	var min_h_spacing = 1.1 * font_size, // 1.2 is standard font height:line space ratio
-		previousY = 0,
-		thisY,
-		additionalSpacing;
-	//Preset the Y positions (necessary only for the lower side)
-	//These are used as suggested positions.
-	data.forEach(function(d) {
-		d.startY = slope(d3.round(d.start,2));
-		d.endY = slope(d3.round(d.end,2));
-	});
+  //Go through the list of countries in order, adding additional space as necessary.
+  var min_h_spacing = 1.1 * font_size, // 1.2 is standard font height:line space ratio
+    previousY = 0,
+    thisY,
+    additionalSpacing;
+  //Preset the Y positions (necessary only for the lower side)
+  //These are used as suggested positions.
+  data.forEach(function(d) {
+    d.startY = slope(d3.round(d.start,2));
+    d.endY = slope(d3.round(d.end,2));
+  });
 
-	//Loop over the higher side (right) values, adding space to both sides if there's a collision
-	data
-		.sort(function(a,b) {
-			if (a.end == b.end) return 0;
-			return (a.end < b.end) ? -3 : +3;
-		})
-		.forEach(function(d) {
-			thisY = d.endY; //position "suggestion"
-			additionalSpacing = d3.max([0, d3.min([(min_h_spacing - (thisY - previousY)), min_h_spacing])]);
-	
-			//Adjust all Y positions lower than this end's original Y position by the delta offset to preserve slopes:
-			data.forEach(function(dd) {
-				if (dd.startY >= d.endY) dd.startY += additionalSpacing;
-				if (dd.endY >= d.endY) dd.endY += additionalSpacing;
-			});
-		
-			previousY = thisY;
-		});
+  //Loop over the higher side (right) values, adding space to both sides if there's a collision
+  data
+    .sort(function(a,b) {
+      if (a.end == b.end) return 0;
+      return (a.end < b.end) ? -3 : +3;
+    })
+    .forEach(function(d) {
+      thisY = d.endY; //position "suggestion"
+      additionalSpacing = d3.max([0, d3.min([(min_h_spacing - (thisY - previousY)), min_h_spacing])]);
+  
+      //Adjust all Y positions lower than this end's original Y position by the delta offset to preserve slopes:
+      data.forEach(function(dd) {
+        if (dd.startY >= d.endY) dd.startY += additionalSpacing;
+        if (dd.endY >= d.endY) dd.endY += additionalSpacing;
+      });
+    
+      previousY = thisY;
+    });
 
-	//Loop over the lower side (left) values, adding space to both sides if there's a collision
-	previousY = 0;
-	data
-		.sort(function(a,b) {
-			if (a.startY == b.startY) return 0;
-			return (a.startY < b.startY) ? -1 : +1;
-		})
-		.forEach(function(d) {
-			thisY = d.startY; //position "suggestion"
-			additionalSpacing = d3.max([0, d3.min([(min_h_spacing - (thisY - previousY)), min_h_spacing])]);
-	
-			//Adjust all Y positions lower than this start's original Y position by the delta offset to preserve slopes:
-			data.forEach(function(dd) {
-				if (dd.endY >= d.startY) dd.endY += additionalSpacing;
-				if (dd.label != d.label && dd.startY >= d.startY) dd.startY += additionalSpacing;
-			});
-			previousY = thisY;
-		});
+  //Loop over the lower side (left) values, adding space to both sides if there's a collision
+  previousY = 0;
+  data
+    .sort(function(a,b) {
+      if (a.startY == b.startY) return 0;
+      return (a.startY < b.startY) ? -1 : +1;
+    })
+    .forEach(function(d) {
+      thisY = d.startY; //position "suggestion"
+      additionalSpacing = d3.max([0, d3.min([(min_h_spacing - (thisY - previousY)), min_h_spacing])]);
+  
+      //Adjust all Y positions lower than this start's original Y position by the delta offset to preserve slopes:
+      data.forEach(function(dd) {
+        if (dd.endY >= d.startY) dd.endY += additionalSpacing;
+        if (dd.label != d.label && dd.startY >= d.startY) dd.startY += additionalSpacing;
+      });
+      previousY = thisY;
+    });
 
     // Countries
     var country = chart.selectAll("g.country")
@@ -272,7 +276,7 @@
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", font_size)
+      .style("font-size", "9px")
       .text(function(d) { return d.label+ " " + label_format(d.start);});
 
     // ** Right column
@@ -283,7 +287,7 @@
       .attr("y", function(d) {return d.endY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.end, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", font_size)
+      .style("font-size", "9px")
       .text(function(d) { return label_format(d.end) + " " + d.label;  });
 
     // ** Slope lines
@@ -324,6 +328,7 @@
 
     chart.selectAll("text")
       .on("mouseover",function(d){
+        
         var xPosition = parseFloat(d3.select(this).attr("x")) + document.getElementById("chart").offsetLeft + 1.5*margin.left ;
         var yPosition = parseFloat(d3.select(this).attr("y")) +document.getElementById("chart").offsetTop - font_size*1.5;
                  
@@ -512,7 +517,7 @@ function change(){
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", font_size)
+      .style("font-size", "9px")
       .text(function(d) { return d.label+ " " + label_format(d.start);});
 
     // ** Right column
@@ -523,7 +528,7 @@ function change(){
       .attr("y", function(d) {return d.endY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.end, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", font_size)
+      .style("font-size", "9px")
       .text(function(d) { return label_format(d.end) + " " + d.label;  });
 
     // ** Slope lines
