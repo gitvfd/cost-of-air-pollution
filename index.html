@@ -196,7 +196,7 @@
 
         // Format values for labels
         label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
-console.log(values);
+
 
         font_size = 9,
         margin = 30,
@@ -236,7 +236,6 @@ console.log(values);
     })
     .forEach(function(d) {
       thisY = d.endY; //position "suggestion"
-      console.log((min_h_spacing - (thisY - previousY)));
       additionalSpacing = d3.max([0, d3.min([(min_h_spacing - (thisY - previousY)), min_h_spacing])]);
   
       //Adjust all Y positions lower than this end's original Y position by the delta offset to preserve slopes:
