@@ -6,8 +6,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style>
     body { color: #444; background: #fff; font: normal 12px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
-    header { margin: 0 0 20px 20px; border-bottom: 1px solid #6c6c6c; width: 270px; position: relative; }
-    h1 { font-size: 14px; font-weight: normal; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
+    header { margin: 0 0 20px 20px; border-bottom: 1px solid #6c6c6c; width: 400px; position: relative; }
+    h1 { font-size: 14px; font-weight: bold; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
     h2 { font-size: 12px; font-weight: normal; font-style: italic; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
     small { margin: 0 0 10px 120px; color: #444; font-size: 12px; font-style: italic; top: 0.6em; position: top;}
     a { color: #a3a3a3; }
@@ -24,7 +24,9 @@
     .over line.slope1 { stroke: rgb(70,111,169); stroke-width: 2; }
     .over line.slope2 { stroke: rgb(70,111,169); stroke-width: 2; }
 
-    #textToDisplay{ color: #777 ; font-size: 12px ; font-weight: normal; }
+    #textToDisplay{ color: #777 ; font-size: 13px ; font-weight: normal; }
+
+    #costTextToDisplay{ color: #555 ; font-size: 12.5px ; font-weight: normal; }
     
     .row {
 
@@ -51,7 +53,8 @@
       word-wrap: break-word;
     }
     .span3, .container  {
-      width: 450px;
+      width: 510px;
+      font-size: 12px;
     }
 
     .container {
@@ -92,9 +95,9 @@
       -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
       box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
       pointer-events: none;
-      opacity: 0.75;
-    filter:alpha(opacity=75);
-    -moz-opacity:0.75;
+      opacity: 0.90;
+    filter:alpha(opacity=90);
+    -moz-opacity:0.90;
     }
 
 #tooltip.hidden {
@@ -104,7 +107,7 @@
 #tooltip p {
       margin: 0;
       font-family: sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       line-height: 12px;
     }
   </style>
@@ -114,21 +117,25 @@
     <p>Country: <strong><span id="countryTooltip">All</span></strong></p>
     <p>2005: <i><span id="startTooltip">XX</span></i></p>
     <p>2010: <i><span id="endTooltip">XX</span></i></p>
+    <br>
+    <p><strong><span id="roadTransportCost"></strong></span></p>
 </div>
   <div class="row">
   <div class="span3">
   <header>
+    <center>
     <h1>
-      Cost of deaths from ambient air pollution
+      The Cost of Air Pollution
     </h1><p>
+    </center>
   </header>
 </div></div>
   <div class="row">
   <div class="span3">
     <form >
-      <label><input type="radio" name="mode" id="deathData" value="deathData" checked>  Number of death</label>
-      <label><input type="radio" name="mode" id="vslData" value="vslData" >  VSL</label>
-      <label><input type="radio" name="mode" id="costOfLifeData" value="costOfLifeData" >  Cost of deaths from ambient air</label>
+      <label><input type="radio" name="mode" id="deathData" value="deathData" checked>  Number of deaths</label>
+      <label><input type="radio" name="mode" id="vslData" value="vslData" >  Value of a statistical life</label>
+      <label><input type="radio" name="mode" id="costOfLifeData" value="costOfLifeData" >  Cost of death from outdoor air pollution</label>
     </form>
     <br>
     <small id="unitToDisplay">
@@ -139,7 +146,9 @@
 
   <div class="row">
   <div class="span1" id="chart"></div>
-  <div class="span2" id="textToDisplay"><br><p>Over the 5-year period from 2005 to 2010, there was an overall increase of about 4% in the number of premature deaths due to outdoor air pollution globally - with a 4% improvement in the OECD world being offset by a larger deterioration in the rest of the world:</p><p> while 20 of 34 OECD countries achieved progress, 14 did not.</p><p>The number of deaths due to outdoor air pollution in China rose to 12% of premature deaths; years of life lost increased by about 0.5%. Although the number of deaths in India is only just over half the number in China, the trend in India is increasing faster.</p></div>
+  <div class="span2" id="textToDisplay"><br><p>New data collected by the World Health Organisation shows that outdoor air pollution kills more than 3.5 million people a year globally, far more than was previously estimated.</p></div>
+
+  <div class="span2" id="costTextToDisplay"><br></div>
 </div>
 </body>
 
@@ -370,15 +379,18 @@ function change(){
             URL="data/"+radios[i].value+".csv";
           if(radios[i].value=="deathData"){
                       document.getElementById("unitToDisplay").innerHTML = "Number";
-                      document.getElementById("textToDisplay").innerHTML = "<br><p>Over the 5-year period from 2005 to 2010, there was an overall increase of about 4% in the number of premature deaths due to outdoor air pollution globally - with a 4% improvement in the OECD world being offset by a larger deterioration in the rest of the world:</p><p> while 20 of 34 OECD countries achieved progress, 14 did not.</p><p>The number of deaths due to outdoor air pollution in China rose to 12% of premature deaths; years of life lost increased by about 0.5%. Although the number of deaths in India is only just over half the number in China, the trend in India is increasing faster.</p>";
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>New data collected by the World Health Organisation shows that outdoor air pollution kills more than 3.5 million people a year globally, far more than was previously estimated.</p>";
+                      document.getElementById("costTextToDisplay").innerHTML = "";
           }
           if(radios[i].value=="vslData"){
                       document.getElementById("unitToDisplay").innerHTML = "in USD millions";
-                      document.getElementById("textToDisplay").innerHTML = "<br><p>VSL= Value of a Statistical Life</p><p>In the case of the ultimate impact on health - mortality - economics today possesses a singular, and singularly elegant, <i>standard methodw</i> by which to measure the cost of this impact from a given source: that is to say, to measure the loss of the valued item - life - at the level of the society as a whole. This is the Value of a Statistical Life (VSL).";
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>The calculation of cost uses a concept known as the value of statistical life (VSL), derived from what people say (in surveys) they would be willing to pay to reduce the chances of them dying prematurely. Generally, the value of a statistical life increases with income per capita. Hence, the VSL in OECD countries are higher than in China and India.</p>";
+                      document.getElementById("costTextToDisplay").innerHTML = "";
           }
           if(radios[i].value=="costOfLifeData"){
                       document.getElementById("unitToDisplay").innerHTML = "in USD millions";
-                      document.getElementById("textToDisplay").innerHTML = "<br><p>Outdoor air pollution kills more than three million people across the world every year, and causes health problems from asthma to heart disease for many more.</p><p>This is costing OECD societies plus China and India an estimated 3.5 trillion dollars a year in value of lives lost and ill health, and the trend is rising.</p><p>But how much of the cost of those deaths and health problems is due to pollution from cars, trucks and motorcycles on our roads? Initial evidence based on new information and methods of calculation suggests that road transport is likely responsible for about half the total of USD 1.7 trillion for OECD countries:</p><p>Almost USD 1 trillion.</p>";    
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>The OECD estimates outdoor air pollution is costing its member countries USD 1.7 trillion a year in terms of the value their citizens place on not dying prematurely or falling ill from dirty air. This value comes from a combination of data on number of deaths and the value of statistical life.</p>";
+                      document.getElementById("costTextToDisplay").innerHTML = "<br><p><strong>*</strong> : A review of available information suggests that, on average in OECD countries, <strong>road transport accounts for about 50% of the cost of air pollution</strong>. In emerging economies such as China and India, estimates are lower but still represent a significant burden.</p>";    
           }
             break;
         }
@@ -591,8 +603,16 @@ function change(){
                     .text(function(){
                       if(document.getElementById("unitToDisplay").innerHTML=="Number")
                         return d.end + " deaths";
-                      else  
-                        return d.end + " USD millions";
+                      else 
+                        return d.end + " USD millions" ;
+                    });
+
+        d3.select("#tooltip") 
+                    .select("#roadTransportCost")
+                    .text(function(){
+                        console.log(d.label);
+                      if (URL=="data/costOfLifeData.csv" && !(d.label=="China") && !(d.label=="India") )
+                        return "in 2010, "+d3.round(d.end/2,0)  +" USD millions come from road transport*";
                     });
         d3.select("#tooltip").classed("hidden", false);
       })
