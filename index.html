@@ -207,7 +207,7 @@
         missing = function(d) { return !d.start || !d.end; },
 
         // Format values for labels
-        label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
+        label_format = function(value) { return d3.format(",g")(d3.round(value, 2)); },
 
 
         font_size = 10,
@@ -296,7 +296,7 @@
     country
       .append("text")
       .classed("label start", true)
-      .attr("x", 120)
+      .attr("x", 122)
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
@@ -319,7 +319,7 @@
       .append("line")
       .classed("slope1", function(d) { if (d.start>d.end) return d.start || d.end; })
       .classed("slope2", function(d) { if (d.start<=d.end)return d.start || d.end; })
-      .attr("x1", 130)
+      .attr("x1", 132)
       .attr("x2", width-120)
       .attr("y1", function(d,i) {
         return d.start && d.end ? d.startY - font_size/2 + 2 : null;
@@ -331,7 +331,7 @@
     chart
       .append("text")
       .classed("label start", true)
-      .attr("x", 122)
+      .attr("x", 121)
       .attr("y", 22)
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
@@ -366,12 +366,12 @@
         d3.select("#tooltip")
                     .select("#startTooltip")
                     .text(function(){
-                        return d.start + " deaths";
+                        return label_format(d.start) + " deaths";
                     });
         d3.select("#tooltip") 
                     .select("#endTooltip")
                     .text(function(){
-                        return d.end + " deaths";
+                        return label_format(d.end) + " deaths";
                     });
         d3.select("#tooltip").classed("hidden", false);
       })
@@ -454,7 +454,7 @@ function change(){
         missing = function(d) { return !d.start || !d.end; },
 
         // Format values for labels
-        label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
+        label_format = function(value) { return d3.format(",g")(d3.round(value, 2)); },
 
         font_size = 10,
         margin = 30,
@@ -543,7 +543,7 @@ function change(){
     country
       .append("text")
       .classed("label start", true)
-      .attr("x", 120)
+      .attr("x", 122)
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
@@ -566,7 +566,7 @@ function change(){
       .append("line")
       .classed("slope1", function(d) { if (d.start>d.end) return d.start || d.end; })
       .classed("slope2", function(d) { if (d.start<=d.end)return d.start || d.end; })
-      .attr("x1", 130)
+      .attr("x1", 132)
       .attr("x2", width-120)
       .attr("y1", function(d,i) {
         return d.start && d.end ? d.startY - font_size/2 + 2 : null;
@@ -578,7 +578,7 @@ function change(){
     chart
       .append("text")
       .classed("label start", true)
-      .attr("x", 122)
+      .attr("x", 121)
       .attr("y", 22)
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
@@ -612,24 +612,24 @@ function change(){
                     .select("#startTooltip")
                     .text(function(){
                       if(document.getElementById("unitToDisplay").innerHTML=="Number")
-                        return d.start + " deaths";
+                        return label_format(d.start) + " deaths";
                       else  
-                        return d.start + " USD millions";
+                        return label_format(d.start) + " USD millions";
                     });
         d3.select("#tooltip") 
                     .select("#endTooltip")
                     .text(function(){
                       if(document.getElementById("unitToDisplay").innerHTML=="Number")
-                        return d.end + " deaths";
+                        return label_format(d.end) + " deaths";
                       else 
-                        return d.end + " USD millions" ;
+                        return label_format(d.end) + " USD millions" ;
                     });
 
         d3.select("#tooltip") 
                     .select("#roadTransportCost")
                     .text(function(){
                       if (URL=="data/costOfLifeData.csv" && !(d.label=="China") && !(d.label=="India") )
-                        return "in 2010, "+d3.round(d.end/2,0)  +" USD millions come from road transport*";
+                        return "in 2010, "+label_format(d.end/2)  +" USD millions come from road transport*";
                     });
         d3.select("#tooltip").classed("hidden", false);
       })
