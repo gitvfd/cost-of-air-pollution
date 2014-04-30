@@ -5,26 +5,26 @@
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style>
-    body { color: #444; background: #fff; font: normal 12px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
+    body { color: #555; background: #fff; font: normal 13px "HelveticaNeueLT", Helvetica, Arial, sans-serif; margin: 2em; }
     header { margin: 0 0 20px 20px; border-bottom: 1px solid #6c6c6c; width: 480px; position: relative; }
     h1 { font-size: 14px; font-weight: bold; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
     h2 { font-size: 12px; font-weight: normal; font-style: italic; text-shadow: #fff 0 1px 0; margin: 0 0 0 0; padding: 0; }
-    small { margin: 0 0 10px 120px; color: #444; font-size: 12px; font-style: italic; top: 0.6em; position: top;}
+    small { margin: 0 0 10px 130px; color: #555; font-size: 13px; font-style: italic; top: 0.6em; position: top;}
     a { color: #a3a3a3; }
 
-    text.label { fill: #444; }
+    text.label { fill: #555; }
     text.label.start { text-anchor: end; }
-    line.slope1 {stroke: rgb(112,113,115); stroke-width: 1; }
-    line.slope2 {stroke: rgb(163,191,51); stroke-width: 1; }
+    line.slope1 {stroke: rgb(252,30,30); stroke-width: 1.5; }
+    line.slope2 {stroke: rgb(117,217,54); stroke-width: 1.5; }
 
     .missing text.label { display: none; }
     .missing line.slope { display: none; }
 
-    .over text.label { fill: rgb(70,111,169); font-size: 10px !important; font-weight: bold; cursor: default;}
-    .over line.slope1 { stroke: rgb(70,111,169); stroke-width: 2; }
-    .over line.slope2 { stroke: rgb(70,111,169); stroke-width: 2; }
+    .over text.label { fill: rgb(76,120,184); font-size: 11px !important; font-weight: bold; cursor: default;}
+    .over line.slope1 { stroke: rgb(76,120,184); stroke-width: 2; }
+    .over line.slope2 { stroke: rgb(76,120,184); stroke-width: 2; }
 
-    #textToDisplay{ color: #777 ; font-size: 13px ; font-weight: normal; }
+    #textToDisplay{ color: #777 ; font-size: 14px ; font-weight: normal; }
 
     #costTextToDisplay{ color: #555 ; font-size: 12.5px ; font-weight: normal; }
     
@@ -110,6 +110,15 @@
       font-size: 11px;
       line-height: 12px;
     }
+  a.image {
+      content:url("data/costOfAirPollution.PNG");
+      -o-box-shadow:      6px 6px 14px #777;
+      -icab-box-shadow:   6px 6px 14px #777;
+      -khtml-box-shadow:  6px 6px 14px #777;
+      -moz-box-shadow:    6px 6px 14px #777;
+      -webkit-box-shadow: 6px 6px 14px #777;
+      box-shadow:         6px 6px 14px #777;
+  }​
   </style>
 </head>
 <body>
@@ -149,6 +158,8 @@
   <div class="span2" id="textToDisplay"><br><p>New data collected by the World Health Organisation shows that outdoor air pollution kills more than 3.5 million people a year globally, far more than was previously estimated.</p></div>
 
   <div class="span2" id="costTextToDisplay"><br></div>
+  <br>
+  <div ><a class="image" href="http://dx.doi.org/10.1787/9789264210448-en" target="_blank"> </a></div>
 </div>
 </body>
 
@@ -198,7 +209,7 @@
         label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
 
 
-        font_size = 9,
+        font_size = 10,
         margin = 30,
         width = 300,
         height = countries.length * font_size*1.5,
@@ -288,18 +299,18 @@
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", "9px")
+      .style("font-size", "10px")// Couln't put "font_size" due to bug in explorer
       .text(function(d) { return d.label+ " " + label_format(d.start);});
 
     // ** Right column
     country
       .append("text")
       .classed("label end", true)
-      .attr("x", width-100)
+      .attr("x", width-110)
       .attr("y", function(d) {return d.endY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.end, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", "9px")
+      .style("font-size", "10px")// Couln't put "font_size" due to bug in explorer
       .text(function(d) { return label_format(d.end) + " " + d.label;  });
 
     // ** Slope lines
@@ -308,7 +319,7 @@
       .classed("slope1", function(d) { if (d.start>d.end) return d.start || d.end; })
       .classed("slope2", function(d) { if (d.start<=d.end)return d.start || d.end; })
       .attr("x1", 130)
-      .attr("x2", width-110)
+      .attr("x2", width-120)
       .attr("y1", function(d,i) {
         return d.start && d.end ? d.startY - font_size/2 + 2 : null;
       })
@@ -330,7 +341,7 @@
     chart
       .append("text")
       .classed("label start", true)
-      .attr("x", width-75)
+      .attr("x", width-82)
       .attr("y", 22)
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
@@ -392,8 +403,8 @@ function change(){
           }
           if(radios[i].value=="costOfLifeData"){
                       document.getElementById("unitToDisplay").innerHTML = "in USD millions";
-                      document.getElementById("textToDisplay").innerHTML = "<br><p>The OECD estimates outdoor air pollution is costing its member countries USD 1.7 trillion a year in terms of the value their citizens place on not dying prematurely or falling ill from dirty air. This value comes from a combination of data on number of deaths and the value of statistical life.</p>";
-                      document.getElementById("costTextToDisplay").innerHTML = "<br><p><strong>*</strong> : A review of available information suggests that, on average in OECD countries, <strong>road transport accounts for about 50% of the cost of air pollution</strong>. In emerging economies such as China and India, estimates are lower but still represent a significant burden.</p>";    
+                      document.getElementById("textToDisplay").innerHTML = "<br><p>The OECD estimates that outdoor air pollution is costing its member countries USD 1.57 trillion per year in terms of the value their citizens place on not dying prematurely from dirty air (1.7 trillion if including years of illness).</p>";
+                      document.getElementById("costTextToDisplay").innerHTML = "<br><p><strong>*</strong> In OECD countries, <strong>road transport accounts for an average 50% of the cost of air pollution</strong>. In emerging economies such as China and India, estimates are lower but still represent a significant burden. </p>";    
           }
             break;
         }
@@ -444,7 +455,7 @@ function change(){
         // Format values for labels
         label_format = function(value) { return d3.format("g")(d3.round(value, 2)); },
 
-        font_size = 9,
+        font_size = 10,
         margin = 30,
         width = 300,
         height = countries.length * font_size*1.5;
@@ -535,18 +546,18 @@ function change(){
       .attr("y", function(d) {return d.startY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", "9px")
+      .style("font-size", "10px")
       .text(function(d) { return d.label+ " " + label_format(d.start);});
 
     // ** Right column
     country
       .append("text")
       .classed("label end", true)
-      .attr("x", width-100)
+      .attr("x", width-110)
       .attr("y", function(d) {return d.endY;})
       //.attr("y", function(d,i) { var rounded = d3.round(d.end, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
-      .style("font-size", "9px")
+      .style("font-size", "10px")
       .text(function(d) { return label_format(d.end) + " " + d.label;  });
 
     // ** Slope lines
@@ -555,7 +566,7 @@ function change(){
       .classed("slope1", function(d) { if (d.start>d.end) return d.start || d.end; })
       .classed("slope2", function(d) { if (d.start<=d.end)return d.start || d.end; })
       .attr("x1", 130)
-      .attr("x2", width-110)
+      .attr("x2", width-120)
       .attr("y1", function(d,i) {
         return d.start && d.end ? d.startY - font_size/2 + 2 : null;
       })
@@ -577,7 +588,7 @@ function change(){
     chart
       .append("text")
       .classed("label start", true)
-      .attr("x", width-75)
+      .attr("x", width-82)
       .attr("y", 22)
       //.attr("y", function(d,i) { var rounded = d3.round(d.start, 1); return slope(rounded) })
       .attr("xml:space", "preserve")
